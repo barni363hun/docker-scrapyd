@@ -9,7 +9,7 @@ on:
       - README.md
 
 env:
-  IMAGE_NAME: 'easypi/scrapyd'
+  IMAGE_NAME: 'barni363hun/scrapyd'
   SCRAPYD_VERSION: '1.3.0'
   SCRAPY_VERSION: '2.6.2'
 
@@ -45,35 +45,3 @@ jobs:
             ghcr.io/${{ env.IMAGE_NAME }}:${{ env.SCRAPYD_VERSION }}-${{ env.SCRAPY_VERSION }}
             ghcr.io/${{ env.IMAGE_NAME }}:latest
           push: true
-
-      - if: ${{ always() }}
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          channel-id: github
-          payload: |
-            {
-              "attachments": [
-                {
-                  "color": "${{ job.status == 'success' && 'good' || 'danger' }}",
-                  "title": "${{ github.repository }}",
-                  "title_link": "https://github.com/${{ github.repository }}",
-                  "text": "docker build image result",
-                  "fields": [
-                    {
-                      "title": "Image",
-                      "value": "<https://hub.docker.com/r/${{ env.IMAGE_NAME }}|${{ env.IMAGE_NAME }}>",
-                      "short": true
-                    },
-                    {
-                      "title": "Status",
-                      "value": "${{ job.status }}",
-                      "short": true
-                    }
-                  ],
-                  "footer": "Github Actions",
-                  "footer_icon": "https://github.githubassets.com/favicon.ico"
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
